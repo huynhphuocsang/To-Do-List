@@ -12,6 +12,7 @@ class  Items extends Component {
   isEdit(item){
     
     this.props.getItemEdit(item)
+    console.log(item)
   }
 
   render(){
@@ -27,8 +28,8 @@ class  Items extends Component {
 
      
     <tr>
-          <th scope="row">{this.props.indexOntable}</th>
-          <td>{this.props.item.name}</td>
+          <th scope="row">{this.props.indexOntable+1}</th>
+          <td>{this.props.item.taskName}</td>
           {levelStr}
           <td> <button type="button" class="btn btn-primary" onClick={()=>this.isEdit(this.props.item)}>Edit</button></td>
           <td><button type="button" class="btn btn-danger" onClick={()=>this.handleDelete(this.props.item.id)}>Delete</button></td>

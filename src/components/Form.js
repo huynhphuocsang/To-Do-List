@@ -19,7 +19,7 @@ class  Form extends Component {
     let taskName = ''
     let levelName = ''
     if(this.props.itemEdit!=''){
-      taskName = this.props.itemEdit.name
+      taskName = this.props.itemEdit.taskName
         if(this.props.itemEdit.level==0){
           levelName = 'Low'
         }else if(this.props.itemEdit.level==1){
@@ -41,7 +41,7 @@ class  Form extends Component {
     let taskName = ''
     let levelName = ''
     if(item!=''){
-      taskName = item.name
+      taskName = item.taskName
         if(item.level==0){
           levelName = 'Low'
         }else if(item.level==1){
@@ -84,14 +84,15 @@ class  Form extends Component {
   render(){
     
     return (
-        <div className="row  input-task">
+      <div className="row  input-task">
+        <div className="col-md-10 col-sm-12">
           <form className='col-md-10' onSubmit={this.handleSubmit}>
             <div className='row'>
-                      <div className="col-md-7">
+                      <div className="col-md-7 col-sm-12">
                           <input type="text" name='taskName' class="form-control" value={this.state.taskName} onChange={this.handleChange} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="New task"/>
-                        </div>
+                      </div>
 
-                        <div className="col-md-3">
+                        <div className="col-md-3 col-sm-6">
                                   <div className="btn-group">
                                           <button type="button" className="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             {this.state.levelName}
@@ -106,22 +107,23 @@ class  Form extends Component {
 
                         </div>
 
-                        <div className="col-md-2">
+                      <div className="col-md-2 col-sm-6">
                         <button type="submit" class="btn btn-success">Submit</button>
 
-                        </div>
+                      </div>
 
                 </div>
               
-          </form>
+            </form>
+          </div>
+          
                 
 
-                <div className="col-md-2">
+          <div className="col-md-2 col-sm-12">
                 <button type="button" class="btn btn-dark" onClick={this.props.closeForm}>Cancel</button>
-
-                </div>
-
           </div>
+
+      </div>
       
     );
 

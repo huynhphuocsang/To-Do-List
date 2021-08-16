@@ -8,6 +8,7 @@ import misson from './data/Task';
 import {filter, includes, orderBy, remove } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import Form from './components/Form';
+import {getAllTasks,addNewTask,editTask, deleteTask} from "./Helper"; 
 class App extends Component {
   
   constructor(props){
@@ -27,16 +28,33 @@ class App extends Component {
   this.deleteItem = this.deleteItem.bind(this)
   this.getItemEdit = this.getItemEdit.bind(this)
   this.handleForm = this.handleForm.bind(this)
+  this.getAllTasks = this.getAllTasks.bind(this)
 }
 
   componentWillMount(){
-    if(localStorage.getItem('tasks')!=null){
-      let items = JSON.parse(localStorage.getItem('tasks'))
-        this.setState({
-          items: items
-        })
-    }
-    
+    this.getAllTasks(); 
+  }
+ componentDidMount(){
+    this.getAllTasks(); 
+  }
+
+   getAllTasks(){
+   
+    getAllTasks("home").then((response)=>{
+      if(response.status===200){
+        return response.json();  
+      }else{
+        throw new Error("kkhong the doc api");
+      }
+    })
+    .then((response)=> {
+      let temp = response.data
+      this.setState({
+        items: temp
+      })
+      // temp = response.data; 
+    })
+    .catch((error)=> console.log(error))
   }
   handleSearch(value){
     this.setState({
@@ -50,43 +68,68 @@ class App extends Component {
       orderDir: orderDir
     })
   }
-  deleteItem(id){
-    let temp =remove(this.state.items,function(item){
-        if(item.id==id){
-          return true
-        } 
+  async deleteItem(id){
+    // let temp =remove(this.state.items,function(item){
+    //     if(item.id==id){
+    //       return true
+    //     } 
+    // })
+    
+   
+    await deleteTask("home/deleteTarget/"+id)
+    .then(response => response.json())
+    .then(response => {
+      console.log(response);
     })
+    .catch(err => {
+      console.log(err);
+    });
+    // localStorage.setItem('tasks',JSON.stringify(this.state.items))
+    this.getAllTasks()
     this.setState({
       idDelete: id
     })
-    localStorage.setItem('tasks',JSON.stringify(this.state.items))
   }
-  addNewTask(taskId,taskName,level){
+  async addNewTask(taskId,taskName,level){
     if(taskId==''){
-      let item = {
-        id: uuidv4(),
-        name: taskName,
-        level: level
-      }
-  
-      let temp = this.state.items; 
-      temp.push(item)
-      this.setState({
-        items: temp
+      let value = JSON.stringify({          
+        id: 100,
+        taskName: taskName,
+        level: level,
+        state: false
+    })
+
+      await addNewTask("home/addNew",  value)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
       })
+      .catch(err => {
+        console.log(err);
+      });
+
     }else{
-      this.state.items.map((item,key)=>{
-        if(item.id == taskId){
-          item.name = taskName
-          item.level = level
-          return
-        }
-        this.setState({
-          itemEdit: ''
-        })
+      
+      // this.setState({
+      //   itemEdit: ''
+      // })
+      let value = JSON.stringify({          
+        id: taskId,
+        taskName: taskName,
+        level: level,
+        state: true
+    })
+      await editTask("home/update", value)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
       })
+      .catch(err => {
+        console.log(err);
+      });
     }
-    localStorage.setItem('tasks',JSON.stringify(this.state.items))
+    //localStorage.setItem('tasks',JSON.stringify(this.state.items))
+       this.getAllTasks()
   }
   getItemEdit(item){
     this.setState({
@@ -107,6 +150,7 @@ class App extends Component {
     }
    
     const itemsFirst = this.state.items
+
     let filterItems = []; 
     
     if(this.state.searchValue.length>=1){
@@ -121,7 +165,7 @@ class App extends Component {
      
       //cach 2: dung js thuan 
       itemsFirst.map((item,index)=>{
-        if(item.name.toLowerCase().includes(this.state.searchValue.toLowerCase())){
+        if(item.taskName.toLowerCase().includes(this.state.searchValue.toLowerCase())){
           filterItems.push(item); 
         }
       });
@@ -129,7 +173,7 @@ class App extends Component {
         filterItems = itemsFirst; 
     }
 
-     let finalItems = orderBy(filterItems,[this.state.orderName.toLowerCase()],[this.state.orderDir.toLowerCase()])
+     let finalItems = orderBy(filterItems,[this.state.orderName],[this.state.orderDir.toLowerCase()])
       
         return (
           <div className="container-fluid ">

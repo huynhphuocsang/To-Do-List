@@ -20,6 +20,12 @@ class  Sort extends Component {
   }
   render(){
     let order = this.state.orderName + "-"+this.state.orderDir;
+    if(this.state.orderName==='taskName'){
+       order =  "Name-"+this.state.orderDir;
+    }else if(this.state.orderName==='level'){
+      order =  "Level-"+this.state.orderDir;
+   }
+    
     return (
 
     <div className="col-md-3 col-sm-12">
@@ -28,10 +34,10 @@ class  Sort extends Component {
                             {order}
                             </button>
                             <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('Name','ASC')}>Name-ASC</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('Name','DESC')}>Name-DESC</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('Level','ASC')}>Level-ASC</a></li>
-                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('Level','DESC')}>Level-DESC</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('taskName','ASC')}>Name-ASC</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('taskName','DESC')}>Name-DESC</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('level','ASC')}>Level-ASC</a></li>
+                            <li><a className="dropdown-item" href="#" onClick={()=>this.pickOrder('level','DESC')}>Level-DESC</a></li>
                             </ul>
                 </div> 
     </div>
